@@ -1,7 +1,47 @@
-/* game_of_life_serial.c
+/*
+ * File: game_of_life_serial.c
+ * Course: CSC 630/730 – Advanced Parallel Computing
+ * Assignment: Serial Implementation of Conway’s Game of Life (64×64)
  *
- * Serial version of Conway's Game of Life for a 64x64 grid.
+ * Purpose:
+ *     Provides the baseline (Ts) sequential implementation of Conway's Game of Life.
+ *     This version is used to:
+ *         • verify correctness of the MPI parallel implementation, and
+ *         • measure serial execution time for speedup/efficiency analysis.
+ *
+ * Program Behavior:
+ *     - Reads a 64×64 initial grid from input.txt
+ *     - Enforces a permanently dead outer border (matching MPI version)
+ *     - Iteratively computes cell states using standard Game of Life rules:
+ *           * live cell survives with 2–3 neighbors
+ *           * dead cell becomes live with exactly 3 neighbors
+ *           * otherwise cell becomes/stays dead
+ *     - Stops early if two consecutive generations are identical
+ *     - Prints every generation and writes them to output.txt
+ *
+ * Input:
+ *     input.txt  – 64×64 matrix of 0s and 1s
+ *                   (generated externally via a Python script with 25% density)
+ *
+ * Output:
+ *     output.txt – full grid for every generation (used for diff comparison)
+ *
+ * Usage (Magnolia):
+ *     gcc -std=c99 -O2 serial.c -o serial
+ *     /usr/bin/time -f "SERIAL %e" ./serial > serial_output.txt
+ *
+ * Verification:
+ *     Correctness confirmed by comparing serial vs MPI output:
+ *
+ *         diff output.txt output_parallel.txt
+ *
+ *     No differences → parallel implementation is correct.
+ *
+ * Author: Tomas Nader
+ * Student ID: W10172066
+ * Date: November 24th 2025
  */
+
 
 #include <stdio.h>
 #include <stdlib.h>
